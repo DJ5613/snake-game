@@ -67,7 +67,8 @@ class Snake(GameObject):
         )
 
         if new_position in self.positions[1:]:
-            self.reset()
+            self.positions = [new_position]
+            self.length = 1
             return
 
         self.positions.insert(0, new_position)
