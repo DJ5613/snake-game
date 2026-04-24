@@ -1,4 +1,5 @@
 import random
+
 import pygame
 
 # === Константы ===
@@ -11,6 +12,8 @@ GRID_HEIGHT = SCREEN_HEIGHT // GRID_SIZE
 
 BOARD_BACKGROUND_COLOR = (0, 0, 0)
 
+CENTER = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+
 UP = (0, -GRID_SIZE)
 DOWN = (0, GRID_SIZE)
 LEFT = (-GRID_SIZE, 0)
@@ -20,7 +23,11 @@ RIGHT = (GRID_SIZE, 0)
 class GameObject:
     """Базовый класс для игровых объектов."""
 
-    def __init__(self, position=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2), body_color=None):
+    def __init__(
+        self,
+        position=CENTER,
+        body_color=None
+    ):
         self.position = position
         self.body_color = body_color
 
@@ -33,7 +40,7 @@ class Snake(GameObject):
     """Класс змейки."""
 
     def __init__(self):
-        super().__init__((SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2), (0, 255, 0))
+        super().__init__(CENTER, (0, 255, 0))
         self.length = 1
         self.positions = [self.position]
         self.direction = RIGHT
@@ -50,7 +57,7 @@ class Snake(GameObject):
             self.next_direction = None
 
     def move(self):
-        """Двигает змейку."""
+        """Перемещает змейку."""
         head_x, head_y = self.get_head_position()
         dx, dy = self.direction
 
@@ -59,7 +66,6 @@ class Snake(GameObject):
             (head_y + dy) % SCREEN_HEIGHT
         )
 
-        # Самоукус
         if new_position in self.positions[1:]:
             self.reset()
             return
@@ -70,16 +76,22 @@ class Snake(GameObject):
             self.positions.pop()
 
     def reset(self):
-        """Сбрасывает змейку."""
+        """Сбрасывает змейку в начальное состояние."""
         self.length = 1
-        self.positions = [(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)]
-        self.direction = random.choice([UP, DOWN, LEFT, RIGHT])
+        self.positions = [CENTER]
+        self.direction = random.choice(
+            [UP, DOWN, LEFT, RIGHT]
+        )
         self.next_direction = None
 
     def draw(self, surface):
         """Отрисовывает змейку."""
         for position in self.positions:
-            pygame.draw.rect(surface, self.body_color, (*position, GRID_SIZE, GRID_SIZE))
+            pygame.draw.rect(
+                surface,
+                self.body_color,
+                (*position, GRID_SIZE, GRID_SIZE)
+            )
 
 
 class Apple(GameObject):
@@ -89,7 +101,7 @@ class Apple(GameObject):
         super().__init__(body_color=(255, 0, 0))
 
     def randomize_position(self, snake_positions):
-        """Выбирает случайную позицию, не занятую змейкой."""
+        """Выбирает позицию, не занятую змейкой."""
         while True:
             new_position = (
                 random.randint(0, GRID_WIDTH - 1) * GRID_SIZE,
@@ -101,7 +113,11 @@ class Apple(GameObject):
 
     def draw(self, surface):
         """Отрисовывает яблоко."""
-        pygame.draw.rect(surface, self.body_color, (*self.position, GRID_SIZE, GRID_SIZE))
+        pygame.draw.rect(
+            surface,
+            self.body_color,
+            (*self.position, GRID_SIZE, GRID_SIZE)
+        )
 
 
 def handle_keys(snake):
@@ -127,11 +143,13 @@ def main():
     """Основной игровой цикл."""
     pygame.init()
 
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    screen = pygame.display.set_mode(
+        (SCREEN_WIDTH, SCREEN_HEIGHT)
+    )
     pygame.display.set_caption("Изгиб Питона")
 
     clock = pygame.time.Clock()
-    fps = 5
+    fps = 10
 
     snake = Snake()
     apple = Apple()
