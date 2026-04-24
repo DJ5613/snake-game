@@ -24,9 +24,9 @@ class GameObject:
     """Базовый класс для игровых объектов."""
 
     def __init__(
-        self,
-        position=CENTER,
-        body_color=None
+            self,
+            position=CENTER,
+            body_color=None
     ):
         self.position = position
         self.body_color = body_color
@@ -147,7 +147,7 @@ def main():
     screen = pygame.display.set_mode(
         (SCREEN_WIDTH, SCREEN_HEIGHT)
     )
-    pygame.display.set_caption("Изгиб Питона")
+    pygame.display.set_caption('Изгиб Питона')
 
     clock = pygame.time.Clock()
     fps = 10
@@ -178,5 +178,5 @@ def main():
     pygame.quit()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
